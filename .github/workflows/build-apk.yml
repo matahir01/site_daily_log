@@ -28,20 +28,20 @@ jobs:
           channel: 'stable'
 
       # This repo ships only lib/, assets/, and a hand-configured subset
-      # of android/ (AndroidManifest.xml, build.gradle, MainActivity.kt,
+      # of android/ (AndroidManifest.xml, build.gradle.kts, MainActivity.kt,
       # file_paths.xml) — the rest of the platform scaffolding (gradle
-      # wrapper, settings.gradle, styles.xml, etc.) is generated here,
+      # wrapper, settings.gradle.kts, styles.xml, etc.) is generated here,
       # matching the local "flutter create ." step in README.md.
       - name: Generate Android platform scaffolding
         run: flutter create . --platforms=android --org com.sitedailylog --project-name site_daily_log
 
-      # flutter create regenerates AndroidManifest.xml / build.gradle /
+      # flutter create regenerates AndroidManifest.xml / build.gradle.kts /
       # MainActivity.kt with defaults — restore our committed versions
       # (permissions, applicationId, FileProvider config) over them.
       - name: Restore hand-configured Android files
         run: |
           git checkout -- android/app/src/main/AndroidManifest.xml
-          git checkout -- android/app/build.gradle
+          git checkout -- android/app/build.gradle.kts
           git checkout -- android/app/src/main/res/xml/file_paths.xml
           git checkout -- android/app/src/main/kotlin/com/sitedailylog/app/MainActivity.kt
 
