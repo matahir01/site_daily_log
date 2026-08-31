@@ -22,11 +22,11 @@ This zip contains the app's source code (`lib/`), a partial Android config, and 
 
 1. Extract the zip somewhere, e.g. `~/dev/site_daily_log`.
 2. Run `flutter create .` **inside that folder**. This generates the full `android/`, and platform boilerplate Flutter needs, without touching your `lib/` folder.
-   - ⚠️ It WILL regenerate `android/app/src/main/AndroidManifest.xml` and `android/app/build.gradle` with defaults — after running `flutter create .`, re-copy the two files from this zip back into place (they already have the camera/GPS/storage permissions and FileProvider setup configured). Same for `assets/icon/app_icon.png` and `res/xml/file_paths.xml` if overwritten.
+   - ⚠️ It WILL regenerate `android/app/src/main/AndroidManifest.xml` and `android/app/build.gradle.kts` with defaults — after running `flutter create .`, re-copy the two files from this zip back into place (they already have the camera/GPS/storage permissions and FileProvider setup configured). Same for `assets/icon/app_icon.png` and `res/xml/file_paths.xml` if overwritten.
 3. Run `flutter pub get` to install dependencies.
 4. Generate the app icon into all required resolutions:
    ```
-   flutter pub run flutter_launcher_icons
+   dart run flutter_launcher_icons
    ```
 5. Connect a device or start an emulator, then:
    ```
@@ -72,6 +72,6 @@ When you add fields again later, bump `_dbVersion` and add another `if (oldVersi
 
 ## Before publishing to Play Store
 
-- Change `applicationId` in `android/app/build.gradle` from `com.sitedailylog.app` to something unique to you (and register a matching **release** SHA-1 OAuth client, see above).
-- Replace the debug signing config in `build.gradle` with a real release keystore.
+- Change `applicationId` in `android/app/build.gradle.kts` from `com.sitedailylog.app` to something unique to you (and register a matching **release** SHA-1 OAuth client, see above).
+- Replace the debug signing config in `build.gradle.kts` with a real release keystore.
 - Consider replacing the placeholder icon with real branding.
