@@ -267,7 +267,7 @@ class DatabaseHelper {
 
   Future<double> getTotalExpensesForProject(String projectId) async {
     final expenses = await getExpensesForProject(projectId);
-    return expenses.fold(0.0, (sum, e) => sum + e.amount);
+    return expenses.fold<double>(0.0, (sum, e) => sum + e.amount);
   }
 
   Future<void> deleteExpense(String id) async {

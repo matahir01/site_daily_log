@@ -21,7 +21,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       TextEditingController(text: widget.existingExpense?.amount.toString());
   late final _noteController = TextEditingController(text: widget.existingExpense?.note);
   late ExpenseCategory _category = widget.existingExpense?.category ?? ExpenseCategory.materials;
-  String? _receiptPath = widget.existingExpense?.receiptPhotoPath;
+  late String? _receiptPath = widget.existingExpense?.receiptPhotoPath;
   bool _saving = false;
 
   bool get _isEditing => widget.existingExpense != null;

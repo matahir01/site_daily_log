@@ -242,20 +242,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
         ),
         floatingActionButton: Builder(
           builder: (ctx) {
-            return FloatingActionButton.extended(
-              // Tap = quick add (default, fastest path). Long-press = full form
-              // with more fields, for anyone who wants to enter more detail.
-              onPressed: () async {
-                final currentTab = DefaultTabController.of(ctx).index;
-                final saved = await showModalBottomSheet<bool>(
-                  context: ctx,
-                  isScrollControlled: true,
-                  builder: (_) => currentTab == 0
-                      ? QuickLogSheet(siteId: widget.site.id)
-                      : QuickExpenseSheet(siteId: widget.site.id),
-                );
-                if (saved == true) _load();
-              },
+            return GestureDetector(
               onLongPress: () async {
                 final currentTab = DefaultTabController.of(ctx).index;
                 if (currentTab == 0) {
@@ -265,9 +252,24 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                 }
                 _load();
               },
-              icon: const Icon(Icons.flash_on),
-              label: const Text('Quick Add'),
-              tooltip: 'Long-press for the full form with more fields',
+              child: FloatingActionButton.extended(
+                // Tap = quick add (default, fastest path). Long-press = full form
+                // with more fields, for anyone who wants to enter more detail.
+                onPressed: () async {
+                  final currentTab = DefaultTabController.of(ctx).index;
+                  final saved = await showModalBottomSheet<bool>(
+                    context: ctx,
+                    isScrollControlled: true,
+                    builder: (_) => currentTab == 0
+                        ? QuickLogSheet(siteId: widget.site.id)
+                        : QuickExpenseSheet(siteId: widget.site.id),
+                  );
+                  if (saved == true) _load();
+                },
+                icon: const Icon(Icons.flash_on),
+                label: const Text('Quick Add'),
+                tooltip: 'Long-press for the full form with more fields',
+              ),
             );
           },
         ),
