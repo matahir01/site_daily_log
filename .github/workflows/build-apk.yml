@@ -1,0 +1,62 @@
+name: Build APK
+
+# Builds a release APK on every push, and on demand from the Actions tab
+# (workflow_dispatch). No local Flutter/Android SDK install needed on
+# your machine — GitHub's runner does the work and attaches the .apk as
+# a downloadable artifact.
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      # This repo ships only lib/, assets/, and a hand-configured subset
+      # of android/ (AndroidManifest.xml, build.gradle, MainActivity.kt,
+      # file_paths.xml) — the rest of the platform scaffolding (gradle
+      # wrapper, settings.gradle, styles.xml, etc.) is generated here,
+      # matching the local "flutter create ." step in README.md.
+      - name: Generate Android platform scaffolding
+        run: flutter create . --platforms=android --org com.sitedailylog --project-name site_daily_log
+
+      # flutter create regenerates AndroidManifest.xml / build.gradle /
+      # MainActivity.kt with defaults — restore our committed versions
+      # (permissions, applicationId, FileProvider config) over them.
+      - name: Restore hand-configured Android files
+        run: |
+          git checkout -- android/app/src/main/AndroidManifest.xml
+          git checkout -- android/app/build.gradle
+          git checkout -- android/app/src/main/res/xml/file_paths.xml
+          git checkout -- android/app/src/main/kotlin/com/sitedailylog/app/MainActivity.kt
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate launcher icons
+        run: flutter pub run flutter_launcher_icons
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-daily-log-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
